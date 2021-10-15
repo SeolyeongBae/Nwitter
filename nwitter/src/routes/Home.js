@@ -5,10 +5,13 @@ import {
   collection,
   serverTimestamp,
   getDocs,
+  onSnapshot,
   query,
+  orderBy,
 } from "firebase/firestore";
 
-const Home = () => {
+const Home = ({ userObj }) => {
+  console.log(userObj);
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
   const getNweets = async () => {
@@ -17,19 +20,32 @@ const Home = () => {
       const nweetObject = {
         ...document.data(),
         id: document.id,
+        creatorId: userObj.uid,
       };
       setNweets((prev) => [nweetObject, ...prev]);
     });
   };
   useEffect(() => {
-    getNweets();
+    //댓글 코드 참고함. 시간순 정렬 + version 9 문제 해결, but database 자체에서 트윗 전송 안 됨. time 때문인 듯.
+    const q = query(
+      collection(dbService, "nweets"),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snapshot) => {
+      const nweetArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setNweets(nweetArr);
+    });
   }, []);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     await addDoc(collection(dbService, "nweets"), {
-      nweet,
+      text: nweet,
       createdAt: serverTimestamp(),
+      creatorId: userObj.uid,
     });
     setNweet("");
   };
@@ -39,7 +55,6 @@ const Home = () => {
     } = event;
     setNweet(value);
   };
-  console.log(nweets);
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -55,7 +70,7 @@ const Home = () => {
       <div>
         {nweets.map((nweet) => (
           <div key={nweet.id}>
-            <h4>{nweet.nweet}</h4>
+            <h4>{nweet.text}</h4>
           </div>
         ))}
       </div>
