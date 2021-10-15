@@ -12,3 +12,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const authService = getAuth();
+
+// Line 15:33: 'firebase' is not defined no-undef 오류 발생했음.
+// export const firebaseInstance = firebase; 라고 적어서 그럼 안 작어도 된다?
