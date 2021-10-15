@@ -1,9 +1,16 @@
+import { dbService } from "fBase";
 import React, { useState } from "react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const Home = () => {
   const [nweet, setNweet] = useState("");
-  const onSubmit = (event) => {
-    event.prevnetDefault();
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    await addDoc(collection(dbService, "nweets"), {
+      nweet,
+      createdAt: serverTimestamp(),
+    });
+    setNweet("");
   };
   const onChange = (event) => {
     const {
@@ -13,7 +20,7 @@ const Home = () => {
   };
   return (
     <div>
-      <form>
+      <form onSubmit={onSubmit}>
         <input
           value={nweet}
           onChange={onChange}
