@@ -38,7 +38,7 @@ const Nweet = ({ nweetObj, isOwner }) => {
             <input
               type="text"
               placeholder="Edit your nweet"
-              values={newNweet}
+              value={newNweet}
               required
               onChange={onChange}
             />
