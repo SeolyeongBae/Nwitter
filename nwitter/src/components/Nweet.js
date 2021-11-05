@@ -1,6 +1,7 @@
-import { dbService } from "fBase";
+import { storageService, dbService } from "fBase";
 import React, { useState } from "react";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { deleteObject, ref } from "@firebase/storage";
 
 const Nweet = ({ nweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
@@ -9,8 +10,12 @@ const Nweet = ({ nweetObj, isOwner }) => {
     const ok = window.confirm("Are you soure you wnt to selete this nweet?");
     console.log(ok);
     const NweetTextRef = doc(dbService, "nweets", `${nweetObj.id}`);
+    const NweetimgRef = ref(storageService, nweetObj.attachmentUrl);
     if (ok) {
       await deleteDoc(NweetTextRef); //firebase 9, 오히려 쉬워짐!
+      if (nweetObj.attachmentUrl) {
+        await deleteObject(NweetimgRef);
+      }
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
@@ -49,6 +54,9 @@ const Nweet = ({ nweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{nweetObj.text}</h4>
+          {nweetObj.attachmentUrl && (
+            <img src={nweetObj.attachmentUrl} width="50px" height="50px" />
+          )}
           {isOwner && (
             <>
               <button onClick={onDeleteClick}>Delete Nweet</button>
@@ -60,5 +68,5 @@ const Nweet = ({ nweetObj, isOwner }) => {
     </div>
   );
 };
-
+//attachment인데 attatchment 라고 오타내서 한참 찾음..
 export default Nweet;

@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
 import "firebase/firestore";
 
 const firebaseConfig = {
@@ -15,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const authService = getAuth();
 export const dbService = getFirestore();
+export const storageService = getStorage();
 
 // Line 15:33: 'firebase' is not defined no-undef 오류 발생했음.
 // export const firebaseInstance = firebase; 라고 적어서 그럼 안 작어도 된다?
