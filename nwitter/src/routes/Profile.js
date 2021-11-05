@@ -9,6 +9,7 @@ export default ({ userObj, refreshUser }) => {
   const onLogOutClick = () => {
     history.push("/");
     authService.signOut();
+    refreshUser();
   };
   const onChange = (event) => {
     const {
