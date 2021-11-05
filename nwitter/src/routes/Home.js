@@ -18,7 +18,7 @@ const Home = ({ userObj }) => {
   console.log(userObj);
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   const getNweets = async () => {
     const dbnweets = await getDocs(collection(dbService, "nweets"));
     dbnweets.forEach((document) => {
